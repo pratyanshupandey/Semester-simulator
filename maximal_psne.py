@@ -52,7 +52,7 @@ for psne in psnes:
 print("==========================================================")
 print("Maximal PSNE:")
 for player, strat in enumerate(max_psne):
-    print("Player {}: Strategy: {}".format(player + 1, strategies[strat]))
+    print("Player {}: Strategy: {}".format(player, strategies[strat]))
     print("           Utility: {}".format(max_util[player]))
     print("\n")
 print("==========================================================")
