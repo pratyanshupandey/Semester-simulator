@@ -36,7 +36,7 @@ Game::Game(string config_file)
         cout << "Configuration Loaded successfully.\n";
 
         strategy_space = player_strategies();
-        cout << "Strategy Space created successfully.\n";
+        cout << "Strategy Space created successfully of size " << strategy_space.size() << ".\n";
     }
     else
         cerr << "Unable to open config file.\n";
@@ -228,6 +228,7 @@ void Game::print_strategy_map(string output_file)
             fout << endl;
         }
         fout.close();
+        cout << "Strategy Map Saved.\n";
     }
     else
         cerr << "Error in opening output file for saving strategy map" << output_file << endl;
@@ -270,18 +271,21 @@ void Game::print_nfg_format(string output_file)
         {
             uint idx = 0;
             uint multiplier = 1;
+            uint mask = nfg_idx;
             for (uint i = 0; i < N - 1; i++)
                 multiplier *= strategy_space.size();
             for (uint i = 0; i < N; i++)
             {
-                idx += (nfg_idx % N) * multiplier;
-                nfg_idx /= N;
-                multiplier /= N;
+                idx += (mask % strategy_space.size()) * multiplier;
+                mask /= strategy_space.size();
+                multiplier /= strategy_space.size();
             }
             for (uint i = 0; i < N; i++)
-                fout << utilities[idx][i] << " ";            
+                fout << utilities[idx][i] << " ";
+            printf("\rSaved %d out of %d utility values.", nfg_idx + 1, utilities.size());
         }
         fout.close();
+        cout << "\nNFG Format Saved.\n";
     }
     else
         cerr << "Error in opening output file for saving nfg format" << output_file << endl;
@@ -290,8 +294,22 @@ void Game::print_nfg_format(string output_file)
 // Calculate utilities for all strategy profiles
 void Game::simulate()
 {
-    vector<vector<int>> all_profiles = item_distribution(N, this->strategy_space.size());
+    unsigned long long int dist_count = 1;
+    for (uint i = 0; i < N; i++)
+        dist_count *= strategy_space.size();
 
-    for (uint i = 0; i < all_profiles.size(); i++)
-        utilities.push_back(this->utility(all_profiles[i]));
+    vector<int> item_dist(N);
+
+    for (unsigned long long int i = 0; i < dist_count; i++)
+    {
+        unsigned long long int mask = i;
+        for (uint j = 0; j < N; j++)
+        {
+            item_dist[j] = mask % strategy_space.size();
+            mask /= strategy_space.size();
+        }
+        utilities.push_back(this->utility(item_dist));
+        printf("\rProfile %d out of %d calculated.", i + 1, dist_count);
+    }
+    cout << "\nFinished\n";
 }

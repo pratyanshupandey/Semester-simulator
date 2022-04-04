@@ -120,7 +120,7 @@ int main()
     for (int i = 0; i < psnes.size(); i++)
     {
         for (int j = 0; j < psnes[i].size(); j++)
-            cout << psnes[i][j] + 1 << " ";
+            cout << psnes[i][j] << " ";
         cout << endl;        
     }
 
@@ -145,7 +145,7 @@ int main()
         
         cout << result.size() << " ";
         for (int i = 0; i < result.size(); i++)
-            cout << result[i] + 1 << " ";
+            cout << result[i] << " ";
         cout << endl;
     }
     
