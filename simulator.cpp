@@ -242,6 +242,7 @@ void Game::print_utilities(string output_file)
     ofstream fout(output_file, ios::out);
     if(fout.is_open())
     {
+        fout << strategy_space.size() << endl;
         for (uint i = 0; i < utilities.size(); i++)
         {
             fout << i;
@@ -250,6 +251,7 @@ void Game::print_utilities(string output_file)
             fout << endl;            
         }
         fout.close();
+        cout << "\nUtility Values Saved.\n";
     }
     else
         cerr << "Error in opening output file for saving utilities" << output_file << endl;
